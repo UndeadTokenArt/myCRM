@@ -24,6 +24,8 @@ var db *gorm.DB
 func main() {
 	// Initialize Gin
 	router := gin.Default()
+	// Serve static files from the "static" directory
+	router.Static("/static", "./static")
 	router.LoadHTMLGlob("templates/*")
 
 	// Initialize the database (SQLite in this example)
@@ -39,7 +41,7 @@ func main() {
 
 	// Define your routes and handlers here
 	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "base.tmpl", gin.H{
+		c.HTML(http.StatusOK, "base.html", gin.H{
 			"title": "Main website",
 		})
 	})
