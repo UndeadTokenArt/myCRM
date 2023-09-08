@@ -16,12 +16,33 @@ type Customer struct {
 	FirstName string
 	LastName  string
 	Email     string
+	Address   string
+	Phone     string
+	Buyer     bool
+	Seller    bool
+	Stage     string
 	// Add more fields as needed
 }
 
 var db *gorm.DB
 
 func main() {
+
+	// Testing data
+	myC := Customer{
+		FirstName: "Bill",
+		LastName:  "Zee",
+		Email:     "BillIsGreat@email.com",
+		Address:   "1234 NE Cool St.",
+		Phone:     "503-555-7678",
+		Buyer:     false,
+		Seller:    true,
+		Stage:     "inContract",
+	}
+
+	// Testing Functions
+	fmt.Println(myC.FirstName)
+
 	// Initialize Gin
 	router := gin.Default()
 	// Serve static files from the "static" directory
@@ -41,8 +62,8 @@ func main() {
 
 	// Define your routes and handlers here
 	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "base.html", gin.H{
-			"title": "Main website",
+		c.HTML(http.StatusOK, "base.tmpl", gin.H{
+			"Message": "Welcome to the CRM Page",
 		})
 	})
 
