@@ -5,17 +5,18 @@ import (
 	"customerDB"
 )
 
+
 // Testing data
-myC := Customer {
-	FirstName: "Bill",
-	LastName:  "Zee",
-	Email:     "BillIsGreat@email.com",
-	Address:   "1234 NE Cool St.",
-	Phone:     "503-555-7678",
-	Buyer:     false,
-	Seller:    true,
-	Stage:     "inContract",
-}
+func TestDB() {
+	myC := Customer {
+		FirstName: "Bill",
+		LastName:  "Zee",
+		Email:     "BillIsGreat@email.com",
+		Address:   "1234 NE Cool St.",
+		Phone:     "503-555-7678",
+		Buyer:     false,
+		Seller:    true,
+		Stage:     "inContract",
 
 // Testing Functions
 fieldNames := GetStructFieldNames(myC)
@@ -24,3 +25,6 @@ fieldNames := GetStructFieldNames(myC)
 for _, fieldName := range fieldNames {
 	println(fieldName)
 }
+	}
+}
+
