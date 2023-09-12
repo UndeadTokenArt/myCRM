@@ -7,58 +7,37 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"github.com/undeadtokenart/myCRM/customerDB"
 )
 
-// Define a model struct for your CRM data (e.g., Customer)
-type Customer struct {
-	gorm.Model
-	FirstName string
-	LastName  string
-	Email     string
-	Address   string
-	Phone     string
-	Buyer     bool
-	Seller    bool
-	Stage     string
-	// Add more fields as needed
-}
+var customerClient customerDB.Customer
 
 var db *gorm.DB
 
 func main() {
-
-	// Testing data
-	myC := Customer{
-		FirstName: "Bill",
-		LastName:  "Zee",
-		Email:     "BillIsGreat@email.com",
-		Address:   "1234 NE Cool St.",
-		Phone:     "503-555-7678",
-		Buyer:     false,
-		Seller:    true,
-		Stage:     "inContract",
-	}
-
-	// Testing Functions
-	fmt.Println(myC.FirstName)
-
 	// Initialize Gin
 	router := gin.Default()
 	// Serve static files from the "static" directory
 	router.Static("/static", "./static")
 	router.LoadHTMLGlob("templates/*")
 
-	// Initialize the database (SQLite in this example)
+	// Initialize the database
 	var err error
-	db, err = gorm.Open("sqlite3", "crm.db")
+	db, err = customerDB.GetDB("sqlite3", "crm.db")
 	if err != nil {
 		log.Fatal("Database connection failed:", err)
 	}
 	defer db.Close()
 
+	var customerClient customerDB.Customer
+
 	// Auto-migrate the database to create the Customer table
-	db.AutoMigrate(&Customer{})
+	db.AutoMigrate(customerClient)
+
+	// Start the Gin server
+	port := ":8080"
+	fmt.Printf("Server is running on port %s\n", port)
+	router.Run(port)
 
 	// Define your routes and handlers here
 	router.GET("/", func(c *gin.Context) {
@@ -73,39 +52,6 @@ func main() {
 		})
 	})
 
-	// Example route for creating a customer
-	router.POST("/customers", createCustomer)
-
-	// Example route for fetching a customer by ID
-	router.GET("/customers/:id", getCustomer)
-
-	// Add more routes for updating, deleting, and listing customers
-
-	// Start the Gin server
-	port := ":8080"
-	fmt.Printf("Server is running on port %s\n", port)
-	router.Run(port)
-}
-
-func createCustomer(c *gin.Context) {
-	var customer Customer
-	if err := c.ShouldBindJSON(&customer); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	db.Create(&customer)
-	c.JSON(http.StatusOK, customer)
-}
-
-func getCustomer(c *gin.Context) {
-	var customer Customer
-	id := c.Param("id")
-
-	if err := db.First(&customer, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Customer not found"})
-		return
-	}
-
-	c.JSON(http.StatusOK, customer)
+	router.POST("/customers", customerDB.CreateCustomer)
+	router.GET("/customers/:id", customerDB.GetCustomer)
 }
