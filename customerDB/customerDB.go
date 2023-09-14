@@ -22,12 +22,14 @@ type Customer struct {
 	// Add more fields as needed
 }
 
+var MyDataBase *gorm.DB
+
 func GetDB(dbType, dbPath string) (*gorm.DB, error) {
-	db, err := gorm.Open(dbType, dbPath)
+	MyDataBase, err := gorm.Open(dbType, dbPath)
 	if err != nil {
 		return nil, err
 	}
-	return db, nil
+	return MyDataBase, nil
 }
 
 func GetStructFieldNames(s interface{}) []string {
@@ -57,7 +59,7 @@ func CreateCustomer(c *gin.Context) {
 		return
 	}
 
-	db.Create(&customer)
+	MyDataBase.Create(&customer)
 	c.JSON(http.StatusOK, customer)
 }
 
@@ -65,7 +67,7 @@ func GetCustomer(c *gin.Context) {
 	var customer Customer
 	id := c.Param("id")
 
-	if err := db.First(&customer, id).Error; err != nil {
+	if err := MyDataBase.First(&customer, id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Customer not found"})
 		return
 	}

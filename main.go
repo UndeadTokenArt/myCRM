@@ -6,13 +6,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
 	"github.com/undeadtokenart/myCRM/customerDB"
 )
-
-var customerClient customerDB.Customer
-
-var db *gorm.DB
 
 func main() {
 	// Initialize Gin
@@ -23,16 +18,16 @@ func main() {
 
 	// Initialize the database
 	var err error
-	db, err = customerDB.GetDB("sqlite3", "crm.db")
+	customerDB.MyDataBase, err = customerDB.GetDB("sqlite3", "crm.db")
 	if err != nil {
 		log.Fatal("Database connection failed:", err)
 	}
-	defer db.Close()
+	defer customerDB.MyDataBase.Close()
 
 	var customerClient customerDB.Customer
 
 	// Auto-migrate the database to create the Customer table
-	db.AutoMigrate(customerClient)
+	customerDB.MyDataBase.AutoMigrate(customerClient)
 
 	// Start the Gin server
 	port := ":8080"
