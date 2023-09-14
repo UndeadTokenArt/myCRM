@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="static/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM - Customer Management</title>
+</head>
+
+<body>
+    <div class=content>
+        <h3>{{.Message}}</h3>
+        <form action="/customers" method="POST">
+        <label for="FirstName">First Name:</label>
+        <input type="text" id="FirstName" name="FirstName" value="{{ .FirstName }}" required><br>
+
+        <label for="LastName">Last Name:</label>
+        <input type="text" id="LastName" name="LastName" value="{{ .LastName }}" required><br>
+
+        <label for="Email">Email:</label>
+        <input type="email" id="Email" name="Email" value="{{ .Email }}" required><br>
+
+        <!-- Add input fields for other Customer struct fields as needed -->
+
+        <input type="submit" value="Submit">
+        
+        </form>
+    </div>
+
+        <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>Sidebar</h2>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/newCustomerForm">New Client</a></li>
+        </ul>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2023 UndeadTokenArt</p>
+    </footer>
+
+</body>
+
+
+
