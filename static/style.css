@@ -1,13 +1,18 @@
+
+
+
 .sidebar {
     height: 100%;
     width: 230px;
     position: fixed;
     top: 0;
     left: 0;
-    background-color: #b3ceeb; /* Light blue background color */
+    background-color: hwb(0 36% 64%); /* Light blue background color */
     padding-top: 100px;
     padding-left: 20px;
     color: white;
+
+    
 }
 
 /* Content Styles */

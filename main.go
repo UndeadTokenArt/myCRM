@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"reflect"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -59,4 +60,16 @@ func main() {
 	port := ":8080"
 	fmt.Printf("Server is running on port %s\n", port)
 	router.Run(port)
+}
+
+func getFieldNames(s interface{}) []string {
+	// This function retrieves the field names from a struct
+	// and returns them as a slice of strings
+	var fields []string
+	t := reflect.TypeOf(s)
+	for i := 0; i < t.NumField(); i++ {
+		field := t.Field(i)
+		fields = append(fields, field.Name)
+	}
+	return fields
 }
