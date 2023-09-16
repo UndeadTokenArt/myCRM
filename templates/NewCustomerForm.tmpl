@@ -9,18 +9,16 @@
 
 <body>
     <div class=content>
-        <h3>{{.Message}}</h3>
-    <form action="/userform" method="POST">
+        <h3>New client form</h3>
+    <form action="/newCustomerForm" method="POST">
+
         {{ range . }}
-        <label for="{{ .fields }}">{{ .fields }}:</label>
-        <input type="text" id="{{ .fields }}" name="{{ .fields }}" required><br>
+        <label for="{{ . }}">{{ . }}:</label>
+        <input type="text" id="{{ . }}" name="{{ . }}" required><br>
         {{ end }}
         <input type="submit" value="Submit">
-    </form>
 
-        <input type="submit" value="Submit">
-        
-        </form>
+    </form>
     </div>
 
         <!-- Sidebar -->

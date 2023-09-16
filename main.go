@@ -56,10 +56,7 @@ func main() {
 		clientKeys := customerDB.Customer{}
 		fields := getFieldNames(clientKeys)
 
-		c.HTML(http.StatusOK, "NewCustomerForm.tmpl", gin.H{
-			"Message": "Please tell me about the new Client",
-			"fields":  fields,
-		})
+		c.HTML(http.StatusOK, "NewCustomerForm.tmpl", fields)
 	})
 
 	// router for binding newCustomer form data to Customer struct
