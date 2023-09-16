@@ -2,9 +2,11 @@ myCRM is a small program that runs locally using the Gin framework for GO.
 
 
 features:
+- The form now generates
 - has a front page
 - broken links
 - ungly interface
+
 
 
 Technologies
@@ -14,6 +16,8 @@ Technologies
 
 
 ToDo:
+- NewCustomer form submits to error
+- NewCustomer form does not reflect actual values needed for each Key
 - storing client data in a SQLite database
 - Auto populating templates and forms with Client data
 - managing email templates
