@@ -47,15 +47,30 @@ func main() {
 		})
 	})
 
-	// Saving these for once the form is ready
+	// routes for displaying customer data. probalby
 	router.POST("/customers", customerDB.CreateCustomer)
 	router.GET("/customers/:id", customerDB.GetCustomer)
 
+	// Generate a form with the Customer Struct's keys
 	router.GET("/newCustomerForm", func(c *gin.Context) {
+		clientKeys := customerDB.Customer{}
+		fields := getFieldNames(clientKeys)
+
 		c.HTML(http.StatusOK, "NewCustomerForm.tmpl", gin.H{
 			"Message": "Please tell me about the new Client",
+			"fields":  fields,
 		})
 	})
+
+	// router for binding newCustomer form data to Customer struct
+	router.POST("/newCustomerForm", func(c *gin.Context) {
+		var clientKeys customerDB.Customer
+		c.Bind(&clientKeys)
+
+		//Redirect after binding to DB
+		c.Redirect(http.StatusSeeOther, "/success")
+	})
+
 	// Start the Gin server
 	port := ":8080"
 	fmt.Printf("Server is running on port %s\n", port)

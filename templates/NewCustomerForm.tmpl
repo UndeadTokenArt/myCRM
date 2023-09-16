@@ -12,8 +12,8 @@
         <h3>{{.Message}}</h3>
     <form action="/userform" method="POST">
         {{ range . }}
-        <label for="{{ . }}">{{ . }}:</label>
-        <input type="text" id="{{ . }}" name="{{ . }}" required><br>
+        <label for="{{ .fields }}">{{ .fields }}:</label>
+        <input type="text" id="{{ .fields }}" name="{{ .fields }}" required><br>
         {{ end }}
         <input type="submit" value="Submit">
     </form>
