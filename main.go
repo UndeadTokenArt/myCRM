@@ -85,3 +85,15 @@ func getFieldNames(s interface{}) []string {
 	}
 	return fields
 }
+
+func getFieldTypes(s interface{}) map[string]string {
+	fieldTypes := make(map[string]string)
+	t := reflect.TypeOf(s)
+	for i := 0; i < t.NumField(); i++ {
+		field := t.Field(i)
+		fieldName := field.Name
+		fieldType := field.Type.String()
+		fieldTypes[fieldName] = fieldType
+	}
+	return fieldTypes
+}
