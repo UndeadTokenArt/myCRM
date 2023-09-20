@@ -28,27 +28,20 @@ func main() {
 	}
 	defer customerDB.MyDataBase.Close()
 
-	var customerClient customerDB.Customer
+	// Drop the existing tables (if they exist) DELETE FOR PRODUCTION
+	customerDB.MyDataBase.DropTableIfExists(&customerDB.Customer{})
 
 	// Auto-migrate the database to create the Customer table
-	customerDB.MyDataBase.AutoMigrate(customerClient)
+	customerDB.MyDataBase.AutoMigrate(&customerDB.Customer{})
 
-	// Define your routes and handlers here
+	// Define the routes and handlers
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "base.tmpl", gin.H{
 			"Message": "Welcome to the CRM Page",
 		})
 	})
 
-	// For all intensive purposes, I was using this to test the gin.H passing of data
-	router.GET("/index", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "base.tmpl", gin.H{
-			"Message": "Welcome",
-		})
-	})
-
-	// routes for displaying customer data. probalby
-	router.POST("/customers", customerDB.CreateCustomer)
+	// routes for displaying customer data. probably - Not fully implemented
 	router.GET("/customers/:id", customerDB.GetCustomer)
 
 	// Generate a form with the Customer Struct's keys
@@ -59,13 +52,27 @@ func main() {
 		c.HTML(http.StatusOK, "NewCustomerForm.tmpl", fields)
 	})
 
-	// router for binding newCustomer form data to Customer struct
 	router.POST("/newCustomerForm", func(c *gin.Context) {
+		// Parse the form data into a Customer struct
 		var clientKeys customerDB.Customer
-		c.Bind(&clientKeys)
+		if err := c.ShouldBind(&clientKeys); err != nil {
+			c.HTML(http.StatusBadRequest, "error.tmpl", gin.H{
+				"Message": "Error: Unable to process the form data.",
+			})
+			return
+		}
 
-		//Redirect after binding to DB
-		c.Redirect(http.StatusSeeOther, "/success")
+		// Create a new customer record in the database
+		if err := customerDB.MyDataBase.Create(&clientKeys).Error; err != nil {
+			c.HTML(http.StatusInternalServerError, "error.tmpl", gin.H{
+				"Message": "Error: Unable to create a new customer record.",
+			})
+			return
+		}
+
+		c.HTML(http.StatusOK, "base.tmpl", gin.H{
+			"Message": "Customer record created successfully!",
+		})
 	})
 
 	// Start the Gin server
