@@ -5,7 +5,8 @@ features:
 - The form now generates
 - has a front page
 - broken links
-- ungly interface
+- ugly interface
+- generates the new client form dynamically. 
 
 
 
