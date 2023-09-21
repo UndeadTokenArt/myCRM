@@ -30,6 +30,19 @@ input[type=text], select {
   }
 
 
+  .button {
+    border-radius: 10px;
+    width: 100%;
+    background-color: #007BFF; /* blue */
+    border: none;
+    color: white;
+    padding: 15px 5px;
+    text-align: left;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+  }
+
 .sidebar {
     height: 100%;
     width: 200px;

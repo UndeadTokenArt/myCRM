@@ -44,7 +44,7 @@ func main() {
 	// routes for displaying customer data. probably - Not fully implemented
 	router.GET("/customers/:id", customerDB.GetCustomer)
 
-	// Generate a form with the Customer Struct's keys
+	// render the newCustomerForm.tmpl - Note fields is passed but not used.
 	router.GET("/newCustomerForm", func(c *gin.Context) {
 		clientKeys := customerDB.Customer{}
 		fields := getFieldNames(clientKeys)
@@ -55,24 +55,32 @@ func main() {
 	router.POST("/newCustomerForm", func(c *gin.Context) {
 		// Parse the form data into a Customer struct
 		var clientKeys customerDB.Customer
+
 		if err := c.ShouldBind(&clientKeys); err != nil {
-			c.HTML(http.StatusBadRequest, "error.tmpl", gin.H{
+			c.HTML(http.StatusBadRequest, "base.tmpl", gin.H{
 				"Message": "Error: Unable to process the form data.",
 			})
+			fmt.Println("Buyer:", clientKeys.Buyer)
+			fmt.Println("Seller:", clientKeys.Seller)
 			return
 		}
 
 		// Create a new customer record in the database
 		if err := customerDB.MyDataBase.Create(&clientKeys).Error; err != nil {
-			c.HTML(http.StatusInternalServerError, "error.tmpl", gin.H{
+			fmt.Println("Error creating customer record:", err)
+			c.HTML(http.StatusInternalServerError, "base.tmpl", gin.H{
 				"Message": "Error: Unable to create a new customer record.",
 			})
+			fmt.Println("Buyer:", clientKeys.Buyer)
+			fmt.Println("Seller:", clientKeys.Seller)
 			return
 		}
 
 		c.HTML(http.StatusOK, "base.tmpl", gin.H{
 			"Message": "Customer record created successfully!",
 		})
+		fmt.Println("Buyer:", clientKeys.Buyer)
+		fmt.Println("Seller:", clientKeys.Seller)
 	})
 
 	// Start the Gin server
@@ -91,16 +99,4 @@ func getFieldNames(s interface{}) []string {
 		fields = append(fields, field.Name)
 	}
 	return fields
-}
-
-func getFieldTypes(s interface{}) map[string]string {
-	fieldTypes := make(map[string]string)
-	t := reflect.TypeOf(s)
-	for i := 0; i < t.NumField(); i++ {
-		field := t.Field(i)
-		fieldName := field.Name
-		fieldType := field.Type.String()
-		fieldTypes[fieldName] = fieldType
-	}
-	return fieldTypes
 }
