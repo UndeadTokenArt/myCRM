@@ -8,7 +8,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// Define a model struct for your CRM data (e.g., Customer)
 type Customer struct {
 	gorm.Model
 	FirstName string
@@ -19,7 +18,6 @@ type Customer struct {
 	Buyer     bool
 	Seller    bool
 	Stage     string
-	// Add more fields as needed
 }
 
 var MyDataBase *gorm.DB
